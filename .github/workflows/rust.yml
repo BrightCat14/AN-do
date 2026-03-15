@@ -1,0 +1,66 @@
+name: Rust
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_path: target/x86_64-unknown-linux-gnu/release
+          - os: ubuntu-latest
+            target: i686-unknown-linux-gnu
+            artifact_path: target/i686-unknown-linux-gnu/release
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_path: target/x86_64-pc-windows-msvc/release
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact_path: target/x86_64-apple-darwin/release
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: ${{ matrix.target }}
+        components: rustfmt, clippy
+
+    - name: Cache cargo registry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo index
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo build
+      uses: actions/cache@v4
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Build
+      run: cargo build --release --target=${{ matrix.target }}
+
+    - name: Upload binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: binary-${{ matrix.os }}-${{ matrix.target }}
+        path: ${{ matrix.artifact_path }}/
