@@ -38,6 +38,7 @@ jobs:
         targets: ${{ matrix.target }}
         components: rustfmt, clippy
     - name: install 32 bit tools
+      shell: bash
       run: |
         if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
           sudo dpkg --add-architecture i386
