@@ -40,7 +40,7 @@ app from main.o util.o {
 ⚠️ **Important:** for empty dependencies just write:
 
 ```text
-main.c from {
+main.o from main.c {
     gcc -c main.c -o main.o
 }
 ```
@@ -108,11 +108,11 @@ app from map(src, ".c", ".o") {
 Correct version without double `{}`:
 
 ```text
-main.o from {
+main.o from main.c {
     gcc -c main.c -o main.o
 }
 
-util.o from {
+util.o from util.c {
     gcc -c util.c -o util.o
 }
 
