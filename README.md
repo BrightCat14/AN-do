@@ -105,8 +105,6 @@ app from map(src, ".c", ".o") {
 
 ## 5. Example do.file
 
-Correct version without double `{}`:
-
 ```text
 main.o from main.c {
     gcc -c main.c -o main.o
@@ -143,7 +141,6 @@ app from map(src, ".c", ".o") {
 
 ## 6. Tips
 
-1. For empty dependencies, just leave an empty block `{}` for the command.
-2. Use `rule` for reusable commands.
-3. Pattern rules (`*.o from *.c use compile`) reduce repetitive build rules.
-4. `--dry` is great for debugging the build graph without running commands.
+1. Use `rule` for reusable commands.
+2. Pattern rules (`*.o from *.c use compile`) reduce repetitive build rules.
+3. `--dry` is great for debugging the build graph without running commands.
